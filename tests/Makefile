@@ -6,3 +6,6 @@ all:
 
 generate_indices:
 	gcc -o generate_indices generate_indices.c
+
+generate_nets:
+	g++ -o generate_nets -std=c++14 generate_nets.cpp

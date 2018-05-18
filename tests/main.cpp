@@ -28,7 +28,9 @@ namespace {
 int const distribution_min = 1;
 int const distribution_max = 100;
 int const num_elements = 1000000;
+//int const num_elements = 100;
 int const test_iterations = 10;
+//int const test_iterations = 1;
 }
 
 // Represents a single run of the algorithm.
@@ -72,15 +74,6 @@ struct algorithm_comparison
 
 int main()
 {
-    std::random_device rnd_device;
-    std::mt19937 mersenne_engine(rnd_device());
-
-    std::uniform_int_distribution<int> int_distribution(distribution_min, distribution_max);
-    auto int_generator = std::bind(int_distribution, mersenne_engine);
-
-    std::uniform_real_distribution<float> float_distribution(distribution_min, distribution_max);
-    auto float_generator = std::bind(float_distribution, mersenne_engine);
-
 #if TEST_DOUBLES
     algorithm_comparison comparison_doubles = {
         {true, 0},
@@ -92,6 +85,11 @@ int main()
     };
     for (int i = 0; i < test_iterations; ++i)
     {
+        std::random_device rnd_device;
+        std::mt19937 mersenne_engine(rnd_device());
+        std::uniform_real_distribution<float> float_distribution(distribution_min, distribution_max);
+        auto float_generator = std::bind(float_distribution, mersenne_engine);
+
         std::vector<double> vec1(num_elements);
         std::generate(begin(vec1), end(vec1), float_generator);
 
@@ -112,7 +110,9 @@ int main()
         for (int i = 0; i < num_elements; ++i)
         {
             assert (vec6.at(i) == vec1.at(i));
+//            std::cout << vec6.at(i) << " ";
         }
+//        std::cout << std::endl;
 #endif
     }
 #endif
@@ -128,6 +128,11 @@ int main()
     };
     for (int i = 0; i < test_iterations; ++i)
     {
+        std::random_device rnd_device;
+        std::mt19937 mersenne_engine(rnd_device());
+        std::uniform_real_distribution<float> float_distribution(distribution_min, distribution_max);
+        auto float_generator = std::bind(float_distribution, mersenne_engine);
+
         std::vector<float> vec1(num_elements);
         std::generate(begin(vec1), end(vec1), float_generator);
 
@@ -160,6 +165,11 @@ int main()
     };
     for (int i = 0; i < test_iterations; ++i)
     {
+        std::random_device rnd_device;
+        std::mt19937 mersenne_engine(rnd_device());
+        std::uniform_int_distribution<int> int_distribution(distribution_min, distribution_max);
+        auto int_generator = std::bind(int_distribution, mersenne_engine);
+
         std::vector<int> vec1(num_elements);
         std::generate(begin(vec1), end(vec1), int_generator);
 

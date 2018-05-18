@@ -52,6 +52,10 @@ it may need the flag -march=native to compile and the flag -Ofast to get all the
 #include <vector>
 #include <immintrin.h>
 
+#include "tests/sorting_network.hpp"
+
+#define VECTOR_SORT_FALLBACK_INSERTION_SORT 0
+
 namespace vector_sort
 {
     template <typename T>
@@ -1039,8 +1043,12 @@ vector_sort::internal::sort_recursive(T *unsorted_array, T *tmp_array1, T *tmp_a
         vector_sort::internal::sort_recursive(&unsorted_array[high_offset],   tmp_array1, tmp_array2, high_count);
     }
 
+#if VECTOR_SORT_FALLBACK_INSERTION_SORT
     // Delegate the sorting of partitions of at most 32 elements to insertion sort.
     vector_sort::internal::insertion_sort(unsorted_array, n);
+#else
+    sorting_network::sort<T>(unsorted_array, n);
+#endif
 }
 
 template <typename T>

@@ -4,6 +4,7 @@ all:
 	g++     -pg -O2    ./main.cpp -o main_profile_gcc   -march=native -std=c++14
 	clang++ -O2 -Ofast ./main.cpp -o main_profile_clang -march=native -std=c++14
 
+.PHONY: generate_indices generate_nets
 generate_indices:
 	gcc -o generate_indices generate_indices.c
 

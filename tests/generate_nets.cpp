@@ -83,16 +83,31 @@ std::vector<std::pair<size_t, size_t>> bose_swaps(int n)
 
 int main()
 {
-    for (int i = 1; i <= 8; ++i)
+    size_t max_parallelism = 0;
+    for (int i = 1; i <= 32; ++i)
     {
         std::vector<std::pair<size_t, size_t>> const s = bose_swaps(i);
+        std::vector<bool> r(i);
+        for (int j = 0; j < i; ++j) r[j] = false;
+        size_t m = 0;
 
         std::cout << "Bose Swaps " << i << std::endl;
         std::cout << "{";
         for (std::pair<size_t, size_t> p : s)
         {
+            if (r[p.first] || r[p.second])
+            {
+                std::cout << "}" << std::endl << "{";
+                for (int j = 0; j < i; ++j) r[j] = false;
+                if (m > max_parallelism) max_parallelism = m;
+                m = 0;
+            }
             std::cout << "{" << p.first << ", " << p.second << "}, ";
+            r[p.first] = true;
+            r[p.second] = true;
+            ++m;
         }
         std::cout << "}" << std::endl << std::endl;
     }
+    std::cout << "max parallelism: " << max_parallelism << std::endl;
 }

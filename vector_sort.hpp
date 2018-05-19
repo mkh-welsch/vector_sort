@@ -52,6 +52,10 @@ it may need the flag -march=native to compile and the flag -Ofast to get all the
 #include <vector>
 #include <immintrin.h>
 
+#include "tests/sorting_network.hpp"
+
+#define VECTOR_SORT_FALLBACK_INSERTION_SORT 0
+
 namespace vector_sort
 {
     template <typename T>
@@ -454,11 +458,11 @@ void vector_sort::internal::insertion_sort(T * const data, unsigned long const c
 inline
 void
 vector_sort::internal::partition_4d(double *&in,
-                                                           __m256d &PIVOT_L,
-                                                           __m256d &PIVOT_H,
-                                                           double *&bottom,
-                                                           double *&middle,
-                                                           double *&top)
+                                    __m256d &PIVOT_L,
+                                    __m256d &PIVOT_H,
+                                    double *&bottom,
+                                    double *&middle,
+                                    double *&top)
 {
     __m256d INPUT;
     __m256d LOW;
@@ -492,10 +496,10 @@ vector_sort::internal::partition_4d(double *&in,
 inline
 void
 vector_sort::internal::partition_4d(double *&in,
-                                                           __m256d &PIVOT,
-                                                           double *&bottom,
-                                                           double *&middle,
-                                                           double *&top)
+                                    __m256d &PIVOT,
+                                    double *&bottom,
+                                    double *&middle,
+                                    double *&top)
 {
     __m256d INPUT;
     __m256d LOW;
@@ -531,11 +535,11 @@ vector_sort::internal::partition_4d(double *&in,
 inline
 void
 vector_sort::internal::partition_8f(float *&in,
-                                                           __m256 &PIVOT_L,
-                                                           __m256 &PIVOT_H,
-                                                           float *&bottom,
-                                                           float *&middle,
-                                                           float *&top)
+                                    __m256 &PIVOT_L,
+                                    __m256 &PIVOT_H,
+                                    float *&bottom,
+                                    float *&middle,
+                                    float *&top)
 {
     __m256 INPUT;
     __m256 LOW;
@@ -569,10 +573,10 @@ vector_sort::internal::partition_8f(float *&in,
 inline
 void
 vector_sort::internal::partition_8f(float *&in,
-                                                           __m256 &PIVOT,
-                                                           float *&bottom,
-                                                           float *&middle,
-                                                           float *&top)
+                                    __m256 &PIVOT,
+                                    float *&bottom,
+                                    float *&middle,
+                                    float *&top)
 {
     __m256 INPUT;
     __m256 LOW;
@@ -608,11 +612,11 @@ vector_sort::internal::partition_8f(float *&in,
 inline
 void
 vector_sort::internal::partition_8i(int *&in,
-                                                           __m256i &PIVOT_L,
-                                                           __m256i &PIVOT_H,
-                                                           int *&bottom,
-                                                           int *&middle,
-                                                           int *&top)
+                                    __m256i &PIVOT_L,
+                                    __m256i &PIVOT_H,
+                                    int *&bottom,
+                                    int *&middle,
+                                    int *&top)
 {
     __m256i INPUT;
     __m256i LOW;
@@ -661,10 +665,10 @@ vector_sort::internal::partition_8i(int *&in,
 inline
 void
 vector_sort::internal::partition_8i(int *&in,
-                                                           __m256i &PIVOT,
-                                                           int *&bottom,
-                                                           int *&middle,
-                                                           int *&top)
+                                    __m256i &PIVOT,
+                                    int *&bottom,
+                                    int *&middle,
+                                    int *&top)
 {
     __m256i INPUT;
     __m256i LOW;
@@ -711,12 +715,12 @@ template <>
 inline
 void
 vector_sort::internal::partition_avx2<double>(double *&in,
-                                                                     unsigned long &n,
-                                                                     double pivot1,
-                                                                     double pivot2,
-                                                                     double *&bottom,
-                                                                     double *&middle,
-                                                                     double *&top)
+                                              unsigned long &n,
+                                              double pivot1,
+                                              double pivot2,
+                                              double *&bottom,
+                                              double *&middle,
+                                              double *&top)
 {
     // Duplicate the pivot values 4 times into vector equivalents.
     __m256d PIVOT1 = _mm256_broadcast_sd(&pivot1);
@@ -734,11 +738,11 @@ template <>
 inline
 void
 vector_sort::internal::partition_avx2<double>(double *&in,
-                                                                     unsigned long &n,
-                                                                     double pivot,
-                                                                     double *&bottom,
-                                                                     double *&middle,
-                                                                     double *&top)
+                                              unsigned long &n,
+                                              double pivot,
+                                              double *&bottom,
+                                              double *&middle,
+                                              double *&top)
 {
     // Duplicate the pivot values 4 times into a vector equivalent.
     __m256d PIVOT = _mm256_broadcast_sd(&pivot);
@@ -755,12 +759,12 @@ template <>
 inline
 void
 vector_sort::internal::partition_avx2<float>(float *&in,
-                                                                    unsigned long &n,
-                                                                    float pivot1,
-                                                                    float pivot2,
-                                                                    float *&bottom,
-                                                                    float *&middle,
-                                                                    float *&top)
+                                             unsigned long &n,
+                                             float pivot1,
+                                             float pivot2,
+                                             float *&bottom,
+                                             float *&middle,
+                                             float *&top)
 {
     // Duplicate the pivot values 8 times into vector equivalents.
     __m256 PIVOT1 = _mm256_broadcast_ss(&pivot1);
@@ -778,11 +782,11 @@ template <>
 inline
 void
 vector_sort::internal::partition_avx2<float>(float *&in,
-                                                                    unsigned long &n,
-                                                                    float pivot,
-                                                                    float *&bottom,
-                                                                    float *&middle,
-                                                                    float *&top)
+                                             unsigned long &n,
+                                             float pivot,
+                                             float *&bottom,
+                                             float *&middle,
+                                             float *&top)
 {
     // Duplicate the pivot values 8 times into vector equivalents.
     __m256 PIVOT = _mm256_broadcast_ss(&pivot);
@@ -799,12 +803,12 @@ template <>
 inline
 void
 vector_sort::internal::partition_avx2<int>(int *&in,
-                                                                  unsigned long &n,
-                                                                  int pivot1,
-                                                                  int pivot2,
-                                                                  int *&bottom,
-                                                                  int *&middle,
-                                                                  int *&top)
+                                           unsigned long &n,
+                                           int pivot1,
+                                           int pivot2,
+                                           int *&bottom,
+                                           int *&middle,
+                                           int *&top)
 {
     // Duplicate the pivot values 8 times into vector equivalents.
     __m256i PIVOT1 = _mm256_set1_epi32(pivot1);
@@ -822,11 +826,11 @@ template <>
 inline
 void
 vector_sort::internal::partition_avx2<int>(int *&in,
-                                                                  unsigned long &n,
-                                                                  int pivot,
-                                                                  int *&bottom,
-                                                                  int *&middle,
-                                                                  int *&top)
+                                           unsigned long &n,
+                                           int pivot,
+                                           int *&bottom,
+                                           int *&middle,
+                                           int *&top)
 {
     // Duplicate the pivot values 8 times into vector equivalents.
     __m256i PIVOT = _mm256_set1_epi32(pivot);
@@ -842,15 +846,15 @@ vector_sort::internal::partition_avx2<int>(int *&in,
 template <typename T>
 void
 vector_sort::internal::partition(T *in,
-                                                        T *tmp1,
-                                                        T *tmp2,
-                                                        unsigned long n,
-                                                        unsigned long &out_bottom_offset,
-                                                        unsigned long &out_bottom_count,
-                                                        unsigned long &out_middle_offset,
-                                                        unsigned long &out_middle_count,
-                                                        unsigned long &out_top_offset,
-                                                        unsigned long &out_top_count)
+                                 T *tmp1,
+                                 T *tmp2,
+                                 unsigned long n,
+                                 unsigned long &out_bottom_offset,
+                                 unsigned long &out_bottom_count,
+                                 unsigned long &out_middle_offset,
+                                 unsigned long &out_middle_count,
+                                 unsigned long &out_top_offset,
+                                 unsigned long &out_top_count)
 {
     T * const orig_in = in;
 
@@ -1039,8 +1043,12 @@ vector_sort::internal::sort_recursive(T *unsorted_array, T *tmp_array1, T *tmp_a
         vector_sort::internal::sort_recursive(&unsorted_array[high_offset],   tmp_array1, tmp_array2, high_count);
     }
 
+#if VECTOR_SORT_FALLBACK_INSERTION_SORT
     // Delegate the sorting of partitions of at most 32 elements to insertion sort.
     vector_sort::internal::insertion_sort(unsorted_array, n);
+#else
+    sorting_network::sort<T>(unsorted_array, n);
+#endif
 }
 
 template <typename T>

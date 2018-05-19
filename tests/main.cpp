@@ -28,7 +28,9 @@ namespace {
 int const distribution_min = 1;
 int const distribution_max = 100;
 int const num_elements = 1000000;
+//int const num_elements = 100;
 int const test_iterations = 10;
+//int const test_iterations = 1;
 }
 
 // Represents a single run of the algorithm.
@@ -72,15 +74,6 @@ struct algorithm_comparison
 
 int main()
 {
-    std::random_device rnd_device;
-    std::mt19937 mersenne_engine(rnd_device());
-
-    std::uniform_int_distribution<int> int_distribution(distribution_min, distribution_max);
-    auto int_generator = std::bind(int_distribution, mersenne_engine);
-
-    std::uniform_real_distribution<float> float_distribution(distribution_min, distribution_max);
-    auto float_generator = std::bind(float_distribution, mersenne_engine);
-
 #if TEST_DOUBLES
     algorithm_comparison comparison_doubles = {
         {true, 0},
@@ -92,6 +85,11 @@ int main()
     };
     for (int i = 0; i < test_iterations; ++i)
     {
+        std::random_device rnd_device;
+        std::mt19937 mersenne_engine(rnd_device());
+        std::uniform_real_distribution<float> float_distribution(distribution_min, distribution_max);
+        auto float_generator = std::bind(float_distribution, mersenne_engine);
+
         std::vector<double> vec1(num_elements);
         std::generate(begin(vec1), end(vec1), float_generator);
 
@@ -112,7 +110,9 @@ int main()
         for (int i = 0; i < num_elements; ++i)
         {
             assert (vec6.at(i) == vec1.at(i));
+//            std::cout << vec6.at(i) << " ";
         }
+//        std::cout << std::endl;
 #endif
     }
 #endif
@@ -128,6 +128,11 @@ int main()
     };
     for (int i = 0; i < test_iterations; ++i)
     {
+        std::random_device rnd_device;
+        std::mt19937 mersenne_engine(rnd_device());
+        std::uniform_real_distribution<float> float_distribution(distribution_min, distribution_max);
+        auto float_generator = std::bind(float_distribution, mersenne_engine);
+
         std::vector<float> vec1(num_elements);
         std::generate(begin(vec1), end(vec1), float_generator);
 
@@ -160,6 +165,11 @@ int main()
     };
     for (int i = 0; i < test_iterations; ++i)
     {
+        std::random_device rnd_device;
+        std::mt19937 mersenne_engine(rnd_device());
+        std::uniform_int_distribution<int> int_distribution(distribution_min, distribution_max);
+        auto int_generator = std::bind(int_distribution, mersenne_engine);
+
         std::vector<int> vec1(num_elements);
         std::generate(begin(vec1), end(vec1), int_generator);
 
@@ -231,21 +241,21 @@ int main()
     std::cout << "    modified_quickdouble::qs_double    : " << (comparison_doubles.modified_avx2_quicksort_assessment.correct       ? "correct" : "incorrect") << std::endl;
 //    std::cout << "    inplace_quickdouble::qs_double : " << (comparison_doubles.inplace_avx2_quicksort_assessment.correct       ? "correct" : "incorrect") << std::endl;
     std::cout << "    dualPivot::sort                    : " << (comparison_doubles.dual_pivot_quicksort_assessment.correct ? "correct" : "incorrect") << std::endl;
-    std::cout << "    vector_sort : " << (comparison_doubles.vector_sort_assessment.correct ? "correct" : "incorrect") << std::endl;
+    std::cout << "    vector_sort                        : " << (comparison_doubles.vector_sort_assessment.correct ? "correct" : "incorrect") << std::endl;
     std::cout << "Average time taken per test (smaller is better)" << std::endl;
     std::cout << "    std::sort                          : " << doubles_average_time_per_std_sort             << "ms" << std::endl;
     std::cout << "    quickdouble::qs_double             : " << doubles_average_time_per_avx2_quicksort       << "ms" << std::endl;
     std::cout << "    modified_quickdouble::qs_double    : " << doubles_average_time_per_modified_avx2_quicksort       << "ms" << std::endl;
 //    std::cout << "    inplace_quickdouble::qs_double : " << doubles_average_time_per_inplace_avx2_quicksort       << "ms" << std::endl;
     std::cout << "    dualPivot::sort                    : " << doubles_average_time_per_dual_pivot_quicksort << "ms" << std::endl;
-    std::cout << "    vector_sort : " << doubles_average_time_per_vector_sort << "ms" << std::endl;
+    std::cout << "    vector_sort                        : " << doubles_average_time_per_vector_sort << "ms" << std::endl;
     std::cout << "Speed relative to std::sort (larger is better)" << std::endl;
     std::cout << "    std::sort                          : " << 1.0 << std::endl;
     std::cout << "    quickdouble::qs_double             : " << doubles_avx2_quicksort_speed_relative_to_std_sort       << std::endl;
     std::cout << "    modified_quickdouble::qs_double    : " << doubles_modified_avx2_quicksort_speed_relative_to_std_sort       << std::endl;
 //    std::cout << "    inplace_quickdouble::qs_double : " << doubles_inplace_avx2_quicksort_speed_relative_to_std_sort       << std::endl;
     std::cout << "    dualPivot::sort                    : " << doubles_dual_pivot_quicksort_speed_relative_to_std_sort << std::endl;
-    std::cout << "    vector_sort : " << doubles_vector_sort_speed_relative_to_std_sort << std::endl;
+    std::cout << "    vector_sort                        : " << doubles_vector_sort_speed_relative_to_std_sort << std::endl;
 #endif
 
 #if TEST_FLOATS
@@ -257,17 +267,17 @@ int main()
     std::cout << "    std::sort                          : " << (comparison_floats.std_sort_assessment.correct             ? "correct" : "incorrect") << std::endl;
     std::cout << "    quickfloat::qs_float               : " << (comparison_floats.avx2_quicksort_assessment.correct       ? "correct" : "incorrect") << std::endl;
     std::cout << "    dualPivot::sort                    : " << (comparison_floats.dual_pivot_quicksort_assessment.correct ? "correct" : "incorrect") << std::endl;
-    std::cout << "    vector_sort : " << (comparison_floats.vector_sort_assessment.correct ? "correct" : "incorrect") << std::endl;
+    std::cout << "    vector_sort                        : " << (comparison_floats.vector_sort_assessment.correct ? "correct" : "incorrect") << std::endl;
     std::cout << "Average time taken per test (smaller is better)" << std::endl;
     std::cout << "    std::sort                          : " << floats_average_time_per_std_sort             << "ms" << std::endl;
     std::cout << "    quickfloat::qs_float               : " << floats_average_time_per_avx2_quicksort       << "ms" << std::endl;
     std::cout << "    dualPivot::sort                    : " << floats_average_time_per_dual_pivot_quicksort << "ms" << std::endl;
-    std::cout << "    vector_sort : " << floats_average_time_per_vector_sort << "ms" << std::endl;
+    std::cout << "    vector_sort                        : " << floats_average_time_per_vector_sort << "ms" << std::endl;
     std::cout << "Speed relative to std::sort (larger is better)" << std::endl;
     std::cout << "    std::sort                          : " << 1.0 << std::endl;
     std::cout << "    quickfloat::qs_float               : " << floats_avx2_quicksort_speed_relative_to_std_sort       << std::endl;
     std::cout << "    dualPivot::sort                    : " << floats_dual_pivot_quicksort_speed_relative_to_std_sort << std::endl;
-    std::cout << "    vector_sort : " << floats_vector_sort_speed_relative_to_std_sort << std::endl;
+    std::cout << "    vector_sort                        : " << floats_vector_sort_speed_relative_to_std_sort << std::endl;
 #endif
 
 #if TEST_INTS
@@ -279,17 +289,17 @@ int main()
     std::cout << "    std::sort                          : " << (comparison_ints.std_sort_assessment.correct             ? "correct" : "incorrect") << std::endl;
     std::cout << "    quickint::qs_int                   : " << (comparison_ints.avx2_quicksort_assessment.correct       ? "correct" : "incorrect") << std::endl;
     std::cout << "    dualPivot::sort                    : " << (comparison_ints.dual_pivot_quicksort_assessment.correct ? "correct" : "incorrect") << std::endl;
-    std::cout << "    vector_sort : " << (comparison_ints.vector_sort_assessment.correct ? "correct" : "incorrect") << std::endl;
+    std::cout << "    vector_sort                        : " << (comparison_ints.vector_sort_assessment.correct ? "correct" : "incorrect") << std::endl;
     std::cout << "Average time taken per test (smaller is better)" << std::endl;
     std::cout << "    std::sort                          : " << ints_average_time_per_std_sort             << "ms" << std::endl;
     std::cout << "    quickint::qs_int                   : " << ints_average_time_per_avx2_quicksort       << "ms" << std::endl;
     std::cout << "    dualPivot::sort                    : " << ints_average_time_per_dual_pivot_quicksort << "ms" << std::endl;
-    std::cout << "    vector_sort : " << ints_average_time_per_vector_sort << "ms" << std::endl;
+    std::cout << "    vector_sort                        : " << ints_average_time_per_vector_sort << "ms" << std::endl;
     std::cout << "Speed relative to std::sort (larger is better)" << std::endl;
     std::cout << "    std::sort                          : " << 1.0 << std::endl;
     std::cout << "    quickint::qs_int                   : " << ints_avx2_quicksort_speed_relative_to_std_sort       << std::endl;
     std::cout << "    dualPivot::sort                    : " << ints_dual_pivot_quicksort_speed_relative_to_std_sort << std::endl;
-    std::cout << "    vector_sort : " << ints_vector_sort_speed_relative_to_std_sort << std::endl;
+    std::cout << "    vector_sort                        : " << ints_vector_sort_speed_relative_to_std_sort << std::endl;
 #endif
 
     return 0;

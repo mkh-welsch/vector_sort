@@ -1,4 +1,9 @@
-// Copyright (c) 2018 S. D. Adams <s.d.adams.software@gmail.com>
+/*                                             
+   _` | \ \   / \ \  /       __|   _` |   __| 
+  (   |  \ \ /   `  <       (     (   | \__ \ 
+ \__,_|   \_/    _/\_\     \___| \__,_| ____/                                                                                                          
+Copyright (c) 2018 S. D. Adams <s.d.adams.software@gmail.com>
+*/
 
 #ifndef AVX2_CAS_HPP
 #define AVX2_CAS_HPP

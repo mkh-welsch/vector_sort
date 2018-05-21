@@ -1,7 +1,9 @@
 # vector_sort
-a header only SIMD optimized dual pivot (quick)sort implementation for int, float and double primitives.
+a header only SIMD optimized sort implementation for int, float and double primitives.
 
-speedup for sorting 1 Mio random values againt std::sort on a MacBook Pro is 4.6x (int), 3.2x (float), 2.6x (double).
+uses dual pivot sort algorithm for partition sizes greater than 32 and a static sorting network with bose-swaps for fewer.
+
+speedup for sorting 1 Mio random values againt std::sort is 3 - 6 times (depending on type and processor)
 
 ## usage
 ```Cpp
